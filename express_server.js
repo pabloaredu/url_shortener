@@ -8,11 +8,24 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 
 
+
+// DATA BASE ////////////////////////////////////
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
+// HELPER FUNCTIONS /////////////////////////////
+let createRandomString =  (length) => {
+  var str = '';
+  for (var i = 0; i < length; i++) {
+      str += Math.random().toString(36).substr(2);
+      return str.substr( 0, length );
+  }
+}
+
+
+// ROUTES  ///////////////////////////////////////
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
@@ -36,15 +49,32 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 })
 
-// Create a new URL
+// Create new URL
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  let longURL = req.body.longURL;
+  let shortURL = createRandomString(6);
+  urlDatabase[shortURL] = longURL;
+  res.redirect(`/urls/${shortURL}`);
+});
+
+// Redirect shortURL to website
+app.get("/u/:shortURL", (req, res) => {
+  let shortURL = req.params.shortURL;
+  let longURL = "";
+  for (var key in urlDatabase) {
+    if(key === shortURL) {
+      longURL = urlDatabase[shortURL];
+    };
+  };
+  console.log("this is it:",longURL);
+  res.redirect(longURL);
 });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+
 
 
 
