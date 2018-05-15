@@ -5,6 +5,15 @@
 </head>
 <body>
   <% include partials/_header %>
-  <p> <%= urls[shortURL] %> -  <%= shortURL %> </p>
+  <p> Short URL:  <%= shortURL %> </p>
+
+  <form method="POST" action="/urls/<%= shortURL %>">
+    <input type="text" name="URL" value="<%= urls[shortURL] %>"/>
+    <button type='submit'> Edit </button>
+  </form>
+
+
+
+
 </body>
 </html>

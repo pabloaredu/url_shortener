@@ -57,6 +57,14 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
+// Edit existing URL
+app.post("/urls/:id", (req, res) => {
+  let longURL = req.body.URL;
+  let shortURL = req.params.id;
+  urlDatabase[shortURL] = longURL;
+  res.redirect("/urls");
+});
+
 // Redirect shortURL to website
 app.get("/u/:shortURL", (req, res) => {
   let shortURL = req.params.shortURL;
@@ -68,6 +76,13 @@ app.get("/u/:shortURL", (req, res) => {
   };
   console.log("this is it:",longURL);
   res.redirect(longURL);
+});
+
+// Delete URL
+app.post("/urls/:id/delete", (req, res) => {
+  let shortURL = req.params.id;
+  delete urlDatabase[shortURL];
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
